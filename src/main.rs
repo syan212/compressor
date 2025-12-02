@@ -1,20 +1,34 @@
 use std::collections::HashMap;
 use std::fs;
-use clap::Parser;
+use clap::{Parser, Subcommand};
 
 mod freq;
 
 #[derive(Parser)]
 #[command(about = "A simple file compressor, wip, only does frequency analysis for now")]
-struct Cli {
-    /// The input file to analyze
-    input: String,
+pub struct Cli {
+    #[clap(subcommand)]
+    command: Command,
+}
+
+#[derive(Subcommand, Debug)]
+enum Command {
+    #[command(about = "Perform frequency analysis on a file", name = "freq")]
+    FreqCommand {
+        #[arg(help = "Input file to analyze")]
+        input: String,
+    }
 }
 
 fn main() -> anyhow::Result<()> {
     let args= Cli::parse();
-    let data = fs::read(args.input)?;
-    let freq_count: HashMap<u8, u128> = freq::freq_analysis(data);
-    println!("{:?}", freq_count);
+    match &args.command {
+        Command::FreqCommand { input } => {
+            println!("Performing frequency analysis on file: {}", input);
+            let data: Vec<u8> = fs::read(input)?;
+            let freq: HashMap<u8, u128> = freq::freq_analysis(data);
+            println!("{:?}", freq);
+        }
+    }
     Ok(())
 }
