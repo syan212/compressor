@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 
 #[derive(Debug)]
-enum Node {
+pub enum Node {
     // Leaf node
     Leaf { byte: u8, freq: u32 },
     // Internal node, with left and right children
@@ -10,7 +10,7 @@ enum Node {
 
 // Helper method to get frequency of a node
 impl Node {
-    fn freq(&self) -> u32 {
+    pub fn freq(&self) -> u32 {
         match self {
             Node::Leaf { freq, .. } => *freq,
             Node::Internal { freq, .. } => *freq,

@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::fs;
 use clap::{Parser, Subcommand};
-use huffman::freq;
+use compressor::{freq, compress};
 
-mod huffman;
+mod compressor;
 
 // Main CLI structure
 #[derive(Parser)]
@@ -43,6 +43,11 @@ fn main() -> anyhow::Result<()> {
         }
         Command::CompressCommand { input, output } => {
             println!("Compressing file: {} to {}", input, output);
+            let tree = compress::compress(fs::read(input)?);
+            println!("Huffman tree: {}", match tree {
+                Some(t) => format!("{:?}", t),
+                None => "No data to compress".to_string(),
+            })
         }
     }
     Ok(())
