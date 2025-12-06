@@ -3,9 +3,16 @@ use std::cmp::Ordering;
 #[derive(Debug)]
 pub enum Node {
     // Leaf node
-    Leaf { byte: u8, freq: u32 },
+    Leaf {
+        byte: u8,
+        freq: u32,
+    },
     // Internal node, with left and right children
-    Internal { left: Box<Node>, right: Box<Node>, freq: u32 },
+    Internal {
+        left: Box<Node>,
+        right: Box<Node>,
+        freq: u32,
+    },
 }
 
 // Helper method to get frequency of a node

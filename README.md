@@ -3,5 +3,8 @@
 A simple rust project that compresses files. (Still wip)
 
 - [x] Frequency analysis
-- [ ] Build huffman tree
-- [ ] Output file with canonical huffman codes
+- [x] Build huffman tree
+- [ ] Canonical huffman codes
+- [ ] Output compressed file
+- [ ] Decompression
+  - [ ] Regenerate tree

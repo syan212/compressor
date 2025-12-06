@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 /// Returns a hashmap of the frequency of bytes in `data`
-pub fn freq_analysis(data: Vec<u8>) -> HashMap<u8, u32>{
+pub fn freq_analysis(data: Vec<u8>) -> HashMap<u8, u32> {
     let mut freq_count: HashMap<u8, u32> = HashMap::new();
     for char in data {
         *freq_count.entry(char).or_insert(0) += 1;

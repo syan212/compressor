@@ -1,7 +1,7 @@
+use clap::{Parser, Subcommand};
+use compressor::{compress, freq};
 use std::collections::HashMap;
 use std::fs;
-use clap::{Parser, Subcommand};
-use compressor::{freq, compress};
 
 mod compressor;
 
@@ -23,17 +23,18 @@ enum Command {
         #[arg(help = "Input file to analyze")]
         input: String,
     },
+    // Compression command
     #[command(about = "Compress a file. wip", name = "compress")]
     CompressCommand {
         #[arg(help = "Input file to compress")]
         input: String,
         #[arg(help = "Output compressed file")]
         output: String,
-    }
+    },
 }
 
 fn main() -> anyhow::Result<()> {
-    let args= Cli::parse();
+    let args = Cli::parse();
     match &args.command {
         Command::FreqCommand { input } => {
             println!("Performing frequency analysis on file: {}", input);
@@ -44,10 +45,13 @@ fn main() -> anyhow::Result<()> {
         Command::CompressCommand { input, output } => {
             println!("Compressing file: {} to {}", input, output);
             let tree = compress::compress(fs::read(input)?);
-            println!("Huffman tree: {}", match tree {
-                Some(t) => format!("{:?}", t),
-                None => "No data to compress".to_string(),
-            })
+            println!(
+                "Huffman tree: {}",
+                match tree {
+                    Some(t) => format!("{:?}", t),
+                    None => "No data to compress".to_string(),
+                }
+            )
         }
     }
     Ok(())
