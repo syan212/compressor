@@ -37,10 +37,36 @@ fn build_huffman_tree(freq_map: &HashMap<u8, u32>) -> Option<Node> {
     priority_queue.pop()
 }
 
-pub fn compress(data: Vec<u8>) -> Option<Node> {
-    let freq_map = super::freq::freq_analysis(data.clone());
-    let huffman_tree = build_huffman_tree(&freq_map)?;
+fn generate_huffman_codes(
+    node: &Node,
+    prefix: Vec<bool>,
+    codes: &mut HashMap<u8, Vec<bool>>,
+) {
+    match node {
+        Node::Leaf { byte, .. } => {
+            codes.insert(*byte, prefix);
+        }
+        Node::Internal { left, right, .. } => {
+            let mut left_prefix = prefix.clone();
+            left_prefix.push(false);
+            generate_huffman_codes(left, left_prefix, codes);
+            let mut right_prefix = prefix;
+            right_prefix.push(true);
+            generate_huffman_codes(right, right_prefix, codes);
+        }
+    }
+}
 
+pub fn compress(data: Vec<u8>) -> Option<HashMap<u8, Vec<bool>>> {
+    let freq_map = super::freq::freq_analysis(data.clone());
+    let huffman_tree = build_huffman_tree(&freq_map);
+    let mut huffman_codes: HashMap<u8, Vec<bool>> = HashMap::new();
     // TODO: Implement actual compression logic using the Huffman tree
-    Some(huffman_tree) // Return tree for now
+    match &huffman_tree {
+        None => return None,
+        Some(tree) => {
+            generate_huffman_codes(tree, Vec::new(), &mut huffman_codes);
+            Some(huffman_codes)
+        }
+    }
 }

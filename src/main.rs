@@ -46,7 +46,7 @@ fn main() -> anyhow::Result<()> {
             println!("Compressing file: {} to {}", input, output);
             let tree = compress::compress(fs::read(input)?);
             println!(
-                "Huffman tree: {}",
+                "Huffman codes: {}",
                 match tree {
                     Some(t) => format!("{:?}", t),
                     None => "No data to compress".to_string(),
