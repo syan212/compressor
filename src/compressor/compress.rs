@@ -57,7 +57,7 @@ fn generate_huffman_codes(
     }
 }
 
-pub fn compress(data: Vec<u8>) -> Option<HashMap<u8, Vec<bool>>> {
+pub fn compress(data: Vec<u8>) -> Option<Vec<u8>> {
     let freq_map = super::freq::freq_analysis(data.clone());
     let huffman_tree = build_huffman_tree(&freq_map);
     let mut huffman_codes: HashMap<u8, Vec<bool>> = HashMap::new();
@@ -66,7 +66,27 @@ pub fn compress(data: Vec<u8>) -> Option<HashMap<u8, Vec<bool>>> {
         None => return None,
         Some(tree) => {
             generate_huffman_codes(tree, Vec::new(), &mut huffman_codes);
-            Some(huffman_codes)
+            let mut compressed_data: Vec<u8> = Vec::new();
+            let mut current_byte: u8 = 0;
+            let mut bit_count: u8 = 0;
+            println!("Compressing data");
+            for byte in data {
+                let code = huffman_codes.get(&byte).unwrap();
+                for bit in code {
+                    current_byte <<= 1;
+                    bit_count += 1;
+                    if *bit {
+                        current_byte |= 1;
+                    }
+                    if bit_count == 8 {
+                        compressed_data.push(current_byte);
+                        current_byte = 0;
+                        bit_count = 0;
+                    }
+                }
+            }
+            compressed_data.push(current_byte << (8 - bit_count)); // Push remaining bits if any
+            Some(compressed_data)
         }
     }
 }
