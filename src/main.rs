@@ -45,13 +45,16 @@ fn main() -> anyhow::Result<()> {
         Command::CompressCommand { input, output } => {
             println!("Compressing file: {} to {}", input, output);
             let tree = compress::compress(fs::read(input)?);
-            println!(
-                "Huffman codes: {}",
-                match tree {
-                    Some(t) => format!("{:?}", t),
-                    None => "No data to compress".to_string(),
-                }
-            )
+            match tree {
+                Some(t) => {
+                    println!("Huffman codes: {:?}", t);
+                    println!("Writing to file: {}", output);
+                    fs::write(output, t)?;
+                },
+                None => {
+                    println!("No data to compress")
+                },
+            }
         }
     }
     Ok(())

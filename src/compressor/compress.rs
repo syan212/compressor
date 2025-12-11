@@ -61,7 +61,6 @@ pub fn compress(data: Vec<u8>) -> Option<Vec<u8>> {
     let freq_map = super::freq::freq_analysis(data.clone());
     let huffman_tree = build_huffman_tree(&freq_map);
     let mut huffman_codes: HashMap<u8, Vec<bool>> = HashMap::new();
-    // TODO: Implement actual compression logic using the Huffman tree
     match &huffman_tree {
         None => return None,
         Some(tree) => {
