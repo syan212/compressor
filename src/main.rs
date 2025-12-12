@@ -43,13 +43,12 @@ fn main() -> anyhow::Result<()> {
             println!("{:?}", freq);
         }
         Command::CompressCommand { input, output } => {
-            println!("Compressing file: {} to {}", input, output);
-            let tree = compress::compress(fs::read(input)?);
-            match tree {
-                Some(t) => {
-                    println!("Huffman codes: {:?}", t);
+            println!("Compressing from {} to {}", input, output);
+            let compressed = compress::compress(fs::read(input)?);
+            match compressed {
+                Some(c) => {
                     println!("Writing to file: {}", output);
-                    fs::write(output, t)?;
+                    fs::write(output, c)?;
                 },
                 None => {
                     println!("No data to compress")

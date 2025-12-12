@@ -84,7 +84,10 @@ pub fn compress(data: Vec<u8>) -> Option<Vec<u8>> {
                     }
                 }
             }
-            compressed_data.push(current_byte << (8 - bit_count)); // Push remaining bits if any
+            // Push remaining bits if any
+            if bit_count > 0 {
+                compressed_data.push(current_byte << (8 - bit_count));
+            }
             Some(compressed_data)
         }
     }
